@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import tmdbScrape from "../lib/vidsrc/vidsrc.js";
 
 const require = createRequire(import.meta.url);
 
@@ -11,9 +12,10 @@ export default async function handler(req, res) {
       installed: true,
       package: packageJson.name,
       version: packageJson.version,
-      importable: false,
-      reason: "The GitHub package installs source files, but it does not publish an index.js/main/export entry.",
-      expectedSource: "node_modules/vidsrc.extractor.module/src/vidsrc.ts"
+      importable: typeof tmdbScrape === "function",
+      adapter: "lib/vidsrc/vidsrc.js",
+      defaultBaseUrl: process.env.VIDSRC_BASE_URL || "https://vidsrc.me",
+      note: "The GitHub package is installed, and this project uses a compiled JavaScript adapter. Upstream pages may still return no streams if they require browser verification."
     });
   } catch (error) {
     return res.status(500).json({
