@@ -1,0 +1,12 @@
+{
+  "name": "video-source-api",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "vidsrc.extractor.module": "github:cool-dev-guy/vidsrc.ts"
+  }
+}
