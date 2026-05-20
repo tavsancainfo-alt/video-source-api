@@ -43,23 +43,46 @@ export default async function handler(req, res) {
         mediaId: source.mediaId || String(tmdb)
       }));
 
+    const finalSources = sources.length
+      ? sources
+      : [{
+        name: "VidSrc Embed",
+        type: "embed",
+        quality: "auto",
+        url: embedUrl,
+        referer: null,
+        mediaId: String(tmdb)
+      }];
+
     return res.status(200).json({
       tmdb: String(tmdb),
       type,
-      sources,
+      sources: finalSources,
       rawCount: rawSources.length,
       fallbackEmbed: embedUrl,
       note: sources.length
         ? "vidsrc extractor returned playable stream URLs."
-        : "vidsrc extractor ran, but returned no playable stream URLs. The upstream page may require a browser challenge or its layout may have changed."
+        : "vidsrc extractor returned no direct streams, so the API is returning the VidSrc embed URL as a fallback source."
     });
   } catch (error) {
+    const embedUrl = type === "movie"
+      ? `https://vidsrc.me/embed/${type}?tmdb=${encodeURIComponent(String(tmdb))}`
+      : `https://vidsrc.me/embed/${type}?tmdb=${encodeURIComponent(String(tmdb))}&season=${encodeURIComponent(String(season || ""))}&episode=${encodeURIComponent(String(episode || ""))}`;
+
     return res.status(502).json({
       tmdb: String(tmdb),
       type,
-      sources: [],
+      sources: [{
+        name: "VidSrc Embed",
+        type: "embed",
+        quality: "auto",
+        url: embedUrl,
+        referer: null,
+        mediaId: String(tmdb)
+      }],
+      fallbackEmbed: embedUrl,
       error: error.message,
-      note: "vidsrc extractor could not complete the upstream request."
+      note: "vidsrc extractor could not complete the upstream request, so the API is returning the VidSrc embed URL as a fallback source."
     });
   }
 }
