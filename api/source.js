@@ -7,8 +7,12 @@ export default async function handler(req, res) {
     });
   }
 
+  const sourcesByTmdb = {
+    "27205": []
+  };
+
   return res.status(200).json({
     tmdb: String(tmdb),
-    sources: []
+    sources: sourcesByTmdb[String(tmdb)] || []
   });
 }
