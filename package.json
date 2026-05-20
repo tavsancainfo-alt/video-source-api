@@ -5,5 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "vercel dev"
+  },
+  "dependencies": {
+    "vidsrc.extractor.module": "github:cool-dev-guy/vidsrc.ts"
   }
 }
